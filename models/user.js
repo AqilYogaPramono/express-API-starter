@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 class User {
     static async checkEmail(data) {
         try {
-            const [rows] = await connection.query(`select * from users where email = ? `, [data.email])
+            const [rows] = await connection.query(`select email from users where email = ?`, [data.email])
             return rows.length > 0
         } catch (err) {
             throw err
@@ -24,7 +24,16 @@ class User {
     static async login(data) {
         try {
             const [rows] = await connection.query(`select * from users where email = ? `, [data.email])
-            return rows
+            return rows[0]
+        } catch (err) {
+            throw err
+        }
+    }
+
+    static async getEmail(id) {
+        try {
+            const [rows] = await connection.query(`select email from users where id = ?`, [id])
+            return rows[0]
         } catch (err) {
             throw err
         }
